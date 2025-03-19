@@ -131,37 +131,62 @@
     
         function draw(e) {
     if (!painting) return;
+    
     const x = e.clientX || e.touches[0].clientX;
     const y = e.clientY || e.touches[0].clientY;
-    const color = getRandomColor();
-    const lineWidth = Math.random() * 30 + 10;
-
-    ctx.globalAlpha = 0.7; // Lower opacity for watercolor effect
-    ctx.shadowBlur = 15; // Slight blur effect
-    ctx.shadowColor = color; // Same color for soft bleed
-
-    // Main stroke
-    ctx.strokeStyle = color;
-    ctx.lineWidth = lineWidth;
+    
+    ctx.globalAlpha = Math.random() * 0.4 + 0.5; // Adds transparency variation
+    ctx.strokeStyle = getRandomColor(); 
+    ctx.lineWidth = Math.random() * 40 + 10; // Bigger variation for watery strokes
     ctx.lineCap = "round";
+
+    // Add a soft feathered effect
+    ctx.shadowBlur = 15; 
+    ctx.shadowColor = ctx.strokeStyle; 
 
     ctx.beginPath();
     ctx.moveTo(lastX, lastY);
     ctx.lineTo(x, y);
     ctx.stroke();
 
-    // Subtle secondary strokes to simulate pigment spread
-    ctx.globalAlpha = 0.3;
-    ctx.lineWidth = lineWidth * 1.4;
-    ctx.stroke();
-
-    ctx.globalAlpha = 1; // Reset opacity for future strokes
-    ctx.shadowBlur = 0; // Remove blur after stroke
-
     [lastX, lastY] = [x, y];
     strokes++;
     document.getElementById("paintContainer").style.opacity = Math.min(1, strokes / 20);
 }
+
+//         function draw(e) {
+//     if (!painting) return;
+//     const x = e.clientX || e.touches[0].clientX;
+//     const y = e.clientY || e.touches[0].clientY;
+//     const color = getRandomColor();
+//     const lineWidth = Math.random() * 30 + 10;
+
+//     ctx.globalAlpha = 0.7; // Lower opacity for watercolor effect
+//     ctx.shadowBlur = 15; // Slight blur effect
+//     ctx.shadowColor = color; // Same color for soft bleed
+
+//     // Main stroke
+//     ctx.strokeStyle = color;
+//     ctx.lineWidth = lineWidth;
+//     ctx.lineCap = "round";
+
+//     ctx.beginPath();
+//     ctx.moveTo(lastX, lastY);
+//     ctx.lineTo(x, y);
+//     ctx.stroke();
+
+//     // Subtle secondary strokes to simulate pigment spread
+//     ctx.globalAlpha = 0.3;
+//     ctx.lineWidth = lineWidth * 1.4;
+//     ctx.stroke();
+
+//     ctx.globalAlpha = 1; // Reset opacity for future strokes
+//     ctx.shadowBlur = 0; // Remove blur after stroke
+
+//     [lastX, lastY] = [x, y];
+//     strokes++;
+//     document.getElementById("paintContainer").style.opacity = Math.min(1, strokes / 20);
+// }
 
         // function draw(e) {
         //     if (!painting) return;
