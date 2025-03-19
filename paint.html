@@ -3,34 +3,32 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title id="pageTitle">PATRAS - Paint</title>
+    <title id="pageTitle">PAINT BY PATRAS</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
-    overflow: hidden;
-    background: black;
-    color: #d7c004;
-    font-family: 'Futura', sans-serif;
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    height: 100vh;
-}      
+            overflow: hidden;
+            background: black;
+            color: #d7c004;
+            font-family: 'Futura', sans-serif;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+        }      
         canvas { position: absolute; top: 0; left: 0; width: 100vw; height: 100vh; z-index: 1; }
         .paint-container {
-    text-align: center;
-    opacity: 0;
-    transition: opacity 2s ease-in-out;
-    z-index: 3;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-}
-
-
+            text-align: center;
+            opacity: 0;
+            transition: opacity 2s ease-in-out;
+            z-index: 3;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
         .paint-container img {
             width: 200px;
             display: block;
@@ -80,7 +78,6 @@
             transform: translateX(-50%);
             z-index: 4;
         }
-
     </style>
 </head>
 <body>
@@ -134,8 +131,8 @@
             const x = e.clientX || e.touches[0].clientX;
             const y = e.clientY || e.touches[0].clientY;
     
-            ctx.strokeStyle = getRandomColor(); // Set color before drawing
-            ctx.lineWidth = Math.random() * 30 + 10; // Controlled stroke width
+            ctx.strokeStyle = getRandomColor();
+            ctx.lineWidth = Math.random() * 30 + 10;
             ctx.lineCap = "round";
     
             ctx.beginPath();
@@ -148,84 +145,36 @@
             document.getElementById("paintContainer").style.opacity = Math.min(1, strokes / 20);
         }
     
-        canvas.addEventListener("mousedown", startPosition);
-        canvas.addEventListener("mouseup", stopPosition);
-        canvas.addEventListener("mousemove", draw);
-    
-        canvas.addEventListener("touchstart", startPosition);
-        canvas.addEventListener("touchend", stopPosition);
-        canvas.addEventListener("touchmove", draw);
-    
-        function clearCanvas() {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            strokes = 0;
-            document.getElementById("paintContainer").style.opacity = 0;
-        }
-    
         function downloadArtwork() {
-        if (strokes === 0) {
-            alert("Make some strokes before sharing!");
-            return;
-        }
-
-        const offscreenCanvas = document.createElement('canvas');
-        const offCtx = offscreenCanvas.getContext('2d');
-
-        offscreenCanvas.width = canvas.width;
-        offscreenCanvas.height = canvas.height;
-
-        // Capture the current background color
-        offCtx.fillStyle = window.getComputedStyle(document.body).backgroundColor;
-        offCtx.fillRect(0, 0, offscreenCanvas.width, offscreenCanvas.height);
-
-        // Draw the existing paint strokes
-        offCtx.drawImage(canvas, 0, 0);
-
-        const logo = new Image();
-        const paintText = new Image();
-        
-        logo.crossOrigin = "anonymous";
-        paintText.crossOrigin = "anonymous";
-
-        logo.src = "LOGO-YELLOW.svg";
-        paintText.src = "paint.svg";
-
-        let imagesLoaded = 0;
-
-        function checkAndDownload() {
-            imagesLoaded++;
-            if (imagesLoaded === 2) {
-                // Adjusted logo position and size to maintain aspect ratio
-                const logoWidth = 120;
-                const logoHeight = (logo.naturalHeight / logo.naturalWidth) * logoWidth;
+            if (strokes === 0) {
+                alert("Make some strokes before sharing!");
+                return;
+            }
+    
+            const offscreenCanvas = document.createElement("canvas");
+            const offCtx = offscreenCanvas.getContext("2d");
+            offscreenCanvas.width = canvas.width;
+            offscreenCanvas.height = canvas.height;
+            offCtx.fillStyle = "black";
+            offCtx.fillRect(0, 0, offscreenCanvas.width, offscreenCanvas.height);
+            offCtx.drawImage(canvas, 0, 0);
+    
+            const logo = new Image();
+            logo.src = "LOGO-YELLOW.svg";
+            logo.onload = function () {
+                let logoWidth = offscreenCanvas.width * 0.15;
+                let logoHeight = logoWidth * (logo.naturalHeight / logo.naturalWidth);
                 offCtx.drawImage(logo, offscreenCanvas.width / 2 - logoWidth / 2, 20, logoWidth, logoHeight);
-                
-                // Adjusted "PAINT" text positioning
-                offCtx.drawImage(paintText, offscreenCanvas.width / 2 - 100, offscreenCanvas.height / 2 - 100, 200, 100);
-
-                // Add user name text
-                offCtx.fillStyle = "white";
-                offCtx.font = "2rem Futura, sans-serif";
-                offCtx.textAlign = "center";
-                offCtx.fillText(`BY ${userName.toUpperCase()}`, offscreenCanvas.width / 2, offscreenCanvas.height / 2 + 70);
-
                 const fileName = `PAINT_${userName.toUpperCase()}_PATRAS.png`;
-
                 offscreenCanvas.toBlob(blob => {
-                    const link = document.createElement('a');
+                    const link = document.createElement("a");
                     link.download = fileName;
                     link.href = URL.createObjectURL(blob);
                     link.click();
                     URL.revokeObjectURL(link.href);
                 }, "image/png");
-            }
+            };
         }
-
-        logo.onload = checkAndDownload;
-        paintText.onload = checkAndDownload;
-    }
-
     </script>
-    
 </body>
 </html>
