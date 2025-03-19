@@ -3,32 +3,34 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title id="pageTitle">PAINT BY PATRAS</title>
+    <title id="pageTitle">PATRAS - Paint</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
-            overflow: hidden;
-            background: black;
-            color: #d7c004;
-            font-family: 'Futura', sans-serif;
-            position: relative;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            height: 100vh;
-        }      
+    overflow: hidden;
+    background: black;
+    color: #d7c004;
+    font-family: 'Futura', sans-serif;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+}      
         canvas { position: absolute; top: 0; left: 0; width: 100vw; height: 100vh; z-index: 1; }
         .paint-container {
-            text-align: center;
-            opacity: 0;
-            transition: opacity 2s ease-in-out;
-            z-index: 3;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-        }
+    text-align: center;
+    opacity: 0;
+    transition: opacity 2s ease-in-out;
+    z-index: 3;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+
         .paint-container img {
             width: 200px;
             display: block;
@@ -78,6 +80,7 @@
             transform: translateX(-50%);
             z-index: 4;
         }
+
     </style>
 </head>
 <body>
@@ -176,5 +179,6 @@
             };
         }
     </script>
+    
 </body>
 </html>
