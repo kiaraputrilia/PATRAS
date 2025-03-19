@@ -84,7 +84,7 @@
     </style>
 </head>
 <body>
-    <img src="logo-yellow.svg" alt="Logo" class="logo">
+    <img src="LOGO-YELLOW.svg" alt="Logo" class="logo">
     <div class="paint-container" id="paintContainer">
         <img src="paint.svg" alt="PAINT">
         <div class="name-text" id="nameText"></div>
@@ -163,50 +163,58 @@
         }
     
         function downloadArtwork() {
+    if (strokes === 0) {
+        alert("Make some strokes before sharing!");
+        return;
+    }
+
     const offscreenCanvas = document.createElement('canvas');
     const offCtx = offscreenCanvas.getContext('2d');
 
     offscreenCanvas.width = canvas.width;
     offscreenCanvas.height = canvas.height;
 
-    // Draw the painting onto the new canvas
     offCtx.drawImage(canvas, 0, 0);
 
-    // Load images and merge them
     const logo = new Image();
     const paintText = new Image();
+    
+    logo.crossOrigin = "anonymous"; // Handle CORS if needed
+    paintText.crossOrigin = "anonymous";
 
     logo.src = "logo.svg";
     paintText.src = "paint.svg";
 
-    // Ensure both images are loaded before drawing
     let imagesLoaded = 0;
+
     function checkAndDownload() {
         imagesLoaded++;
-        if (imagesLoaded === 2) { // Ensure both images are loaded
-            offCtx.drawImage(logo, canvas.width / 2 - 60, 20, 120, 120); // Center the logo
-            offCtx.drawImage(paintText, canvas.width / 2 - 100, canvas.height / 2 - 100, 200, 100); // Center PAINT
+        if (imagesLoaded === 2) { // Ensure both images are loaded before drawing
+            offCtx.drawImage(logo, offscreenCanvas.width / 2 - 60, 20, 120, 120);
+            offCtx.drawImage(paintText, offscreenCanvas.width / 2 - 100, offscreenCanvas.height / 2 - 100, 200, 100);
 
-            // Add "BY (INPUT NAME)" text
             offCtx.fillStyle = "white";
             offCtx.font = "2rem Futura, sans-serif";
             offCtx.textAlign = "center";
-            offCtx.fillText(`BY ${userName.toUpperCase()}`, canvas.width / 2, canvas.height / 2 + 50);
+            offCtx.fillText(`BY ${userName.toUpperCase()}`, offscreenCanvas.width / 2, offscreenCanvas.height / 2 + 50);
 
-            // Generate file name dynamically
             const fileName = `PAINT_${userName.toUpperCase()}_PATRAS.png`;
 
-            // Download the merged image
-            const link = document.createElement('a');
-            link.download = fileName;
-            link.href = offscreenCanvas.toDataURL("image/png");
-            link.click();
+            // Convert to image and trigger download
+            offscreenCanvas.toBlob(blob => {
+                const link = document.createElement('a');
+                link.download = fileName;
+                link.href = URL.createObjectURL(blob);
+                link.click();
+                URL.revokeObjectURL(link.href);
+            }, "image/png");
         }
     }
 
     logo.onload = checkAndDownload;
     paintText.onload = checkAndDownload;
 }
+
 
     </script>
     
