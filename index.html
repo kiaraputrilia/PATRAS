@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Enter Your Name</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            height: 100vh; 
+            background: black; 
+            color: #d7c004; 
+            font-family: 'Futura', sans-serif; 
+            flex-direction: column; 
+        }
+        input, button { 
+            margin-top: 10px; 
+            font-size: 1.5rem; 
+            padding: 10px 20px; 
+            font-family: 'Futura', sans-serif; 
+        }
+        .logo { 
+            position: absolute; 
+            top: 40px; 
+            left: 50%; 
+            width: 100px;
+            transform: translateX(-50%);
+        }
+        button {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: none;
+            border: 2px solid #d7c004;
+            color: #d7c004;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 1rem;
+            text-transform: uppercase;
+            transition: background 0.3s, color 0.3s;
+        }
+        button:hover {
+            background: #d7c004;
+            color: black;
+        }
+    </style>
+</head>
+<body>
+    <img src="LOGO-YELLOW.svg" alt="Logo" class="logo">
+    <label for="nameInput">WHAT'S YOUR NAME?</label>
+    <input type="text" id="nameInput" placeholder="Enter your name">
+    <button onclick="startPainting()">Start</button>
+    <script>
+        function startPainting() {
+            const name = document.getElementById("nameInput").value || "Anonymous";
+            window.location.href = `paint.html?name=${encodeURIComponent(name)}`;
+        }
+    </script>
+</body>
+</html>

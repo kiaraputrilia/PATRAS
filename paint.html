@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title id="pageTitle">PATRAS - Paint</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+    overflow: hidden;
+    background: black;
+    color: #d7c004;
+    font-family: 'Futura', sans-serif;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+}      
+        canvas { position: absolute; top: 0; left: 0; width: 100vw; height: 100vh; z-index: 1; }
+        .paint-container {
+    text-align: center;
+    opacity: 0;
+    transition: opacity 2s ease-in-out;
+    z-index: 3;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+
+        .paint-container img {
+            width: 200px;
+            display: block;
+            margin: 0 auto;
+        }
+        .paint-container .name-text {
+            font-size: 2rem;
+            font-family: 'Futura', sans-serif;
+            color: white;
+            margin-top: 10px;
+        }
+        .button-container {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            width: 100%;
+            z-index: 4;
+        }
+        button {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            background: none;
+            border: 2px solid #d7c004;
+            color: #d7c004;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 1rem;
+            text-transform: uppercase;
+            transition: background 0.3s, color 0.3s;
+        }
+        button:hover {
+            background: #d7c004;
+            color: black;
+        }
+        .logo { 
+            position: absolute; 
+            top: 40px; 
+            left: 50%; 
+            width: 100px;
+            transform: translateX(-50%);
+            z-index: 4;
+        }
+
+    </style>
+</head>
+<body>
+    <img src="logo-yellow.svg" alt="Logo" class="logo">
+    <div class="paint-container" id="paintContainer">
+        <img src="paint.svg" alt="PAINT">
+        <div class="name-text" id="nameText"></div>
+    </div>
+    <div class="button-container">
+        <button onclick="clearCanvas()">Restart</button>
+        <button onclick="downloadArtwork()">Share</button>
+    </div>
+    <canvas id="paintCanvas"></canvas>
+    <script>
+        const params = new URLSearchParams(window.location.search);
+        const userName = params.get("name") || "PATRAS";
+        document.title = `${userName} - Paint`;
+        nameText.innerText = `BY ${userName.toUpperCase()}`;
+        
+        const canvas = document.getElementById("paintCanvas");
+        const ctx = canvas.getContext("2d");
+    
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        resizeCanvas();
+        window.addEventListener("resize", resizeCanvas);
+    
+        let painting = false;
+        let lastX, lastY;
+        let strokes = 0;
+        const colors = ["#3d5fc4", "#c01d23", "#0fc3ed", "#53509e", "#008361", "#a04461", "#d7c004", "#e97c2d", "#c79700", "#bd7cae", "#026546", "#bf3c9d"];
+    
+        function getRandomColor() {
+            return colors[Math.floor(Math.random() * colors.length)];
+        }
+    
+        function startPosition(e) {
+            painting = true;
+            [lastX, lastY] = [e.clientX || e.touches[0].clientX, e.clientY || e.touches[0].clientY];
+        }
+    
+        function stopPosition() {
+            painting = false;
+            lastX = lastY = null;
+        }
+    
+        function draw(e) {
+            if (!painting) return;
+            const x = e.clientX || e.touches[0].clientX;
+            const y = e.clientY || e.touches[0].clientY;
+    
+            ctx.strokeStyle = getRandomColor(); // Set color before drawing
+            ctx.lineWidth = Math.random() * 30 + 10; // Controlled stroke width
+            ctx.lineCap = "round";
+    
+            ctx.beginPath();
+            ctx.moveTo(lastX, lastY);
+            ctx.lineTo(x, y);
+            ctx.stroke();
+    
+            [lastX, lastY] = [x, y];
+            strokes++;
+            document.getElementById("paintContainer").style.opacity = Math.min(1, strokes / 20);
+        }
+    
+        canvas.addEventListener("mousedown", startPosition);
+        canvas.addEventListener("mouseup", stopPosition);
+        canvas.addEventListener("mousemove", draw);
+    
+        canvas.addEventListener("touchstart", startPosition);
+        canvas.addEventListener("touchend", stopPosition);
+        canvas.addEventListener("touchmove", draw);
+    
+        function clearCanvas() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            strokes = 0;
+            document.getElementById("paintContainer").style.opacity = 0;
+        }
+    
+        function downloadArtwork() {
+    const offscreenCanvas = document.createElement('canvas');
+    const offCtx = offscreenCanvas.getContext('2d');
+
+    offscreenCanvas.width = canvas.width;
+    offscreenCanvas.height = canvas.height;
+
+    // Draw the painting onto the new canvas
+    offCtx.drawImage(canvas, 0, 0);
+
+    // Load images and merge them
+    const logo = new Image();
+    const paintText = new Image();
+
+    logo.src = "logo.svg";
+    paintText.src = "paint.svg";
+
+    // Ensure both images are loaded before drawing
+    let imagesLoaded = 0;
+    function checkAndDownload() {
+        imagesLoaded++;
+        if (imagesLoaded === 2) { // Ensure both images are loaded
+            offCtx.drawImage(logo, canvas.width / 2 - 60, 20, 120, 120); // Center the logo
+            offCtx.drawImage(paintText, canvas.width / 2 - 100, canvas.height / 2 - 100, 200, 100); // Center PAINT
+
+            // Add "BY (INPUT NAME)" text
+            offCtx.fillStyle = "white";
+            offCtx.font = "2rem Futura, sans-serif";
+            offCtx.textAlign = "center";
+            offCtx.fillText(`BY ${userName.toUpperCase()}`, canvas.width / 2, canvas.height / 2 + 50);
+
+            // Generate file name dynamically
+            const fileName = `PAINT_${userName.toUpperCase()}_PATRAS.png`;
+
+            // Download the merged image
+            const link = document.createElement('a');
+            link.download = fileName;
+            link.href = offscreenCanvas.toDataURL("image/png");
+            link.click();
+        }
+    }
+
+    logo.onload = checkAndDownload;
+    paintText.onload = checkAndDownload;
+}
+
+    </script>
+    
+</body>
+</html>
