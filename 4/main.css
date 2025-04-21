@@ -1,0 +1,16 @@
+@font-face {
+    font-family: 'Sunbeat';
+    src: url('Sunbeat.woff2') format('woff2'),
+         url('Sunbeat.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
+
+body {
+    margin: 0;
+    background: black;
+    overflow: hidden;
+}
+canvas {
+    display: block;
+}

@@ -1,0 +1,57 @@
+html, body {
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  height: 100%;
+}
+
+canvas {
+  display: block; /* Prevents extra spacing below the canvas */
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.marquee {
+  position: absolute;
+  top: 0; /* Adjust the top position as needed */
+  left: 0;
+  width: 100%; /* Ensure it spans the entire width */
+  z-index: 10; /* Ensure it is on top of the canvas */
+  height: 26px;
+  white-space: nowrap;
+  overflow: hidden;
+  font-family: 'Suiss Regular', sans-serif;
+  color: #000000;
+  background-color: #FFEA00;
+  font-size: 20px;
+  border-bottom-style: solid;
+  border-bottom-width: 1px;
+  border-bottom-color: black;
+  text-transform: uppercase; /* Make text uppercase */
+}
+
+.marquee span {
+  display: inline-block;
+  padding-left: 100%;
+  animation: marquee 20s linear infinite; /* Adjust the duration here */
+}
+
+.marquee span:hover {
+  animation-play-state: paused;
+}
+
+.marquee a {
+  color: black;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.marquee a:hover {
+  color: #107aec;
+}
+
+@keyframes marquee {
+  0%   { transform: translate(0, 0); }
+  100% { transform: translate(-100%, 0); }
+}

@@ -1,0 +1,29 @@
+/* Make sure body and canvas take up the whole screen */
+body {
+    margin: 0;
+    background-color: #faf3c0;
+    overflow: hidden;
+}
+
+/* The yellow toolbar at the bottom */
+.toolbar {
+    width: 100vw;
+    height: 10vh;
+    background-color: #FFD700;
+    position: absolute;
+    bottom: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+}
+
+/* Override JS position settings */
+canvas {
+    display: block;
+}
+
+/* Move the color picker & slider inside the toolbar */
+input[type="color"], input[type="range"] {
+    position: relative !important; 
+}
